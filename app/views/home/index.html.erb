@@ -1,0 +1,20 @@
+<div class="home-container">
+  <div class="welcome-section">
+    <h1>Ласкаво просимо до Маркетплейсу!</h1>
+    
+    <% if current_user %>
+      <div class="user-info">
+        <p>Вітаємо, <%= current_user.email %>!</p>
+        <p>Ваша роль: <strong><%= current_user.buyer? ? 'Покупець' : 'Продавець' %></strong></p>
+      </div>
+    <% else %>
+      <div class="auth-cta">
+        <p>Щоб розпочати, будь ласка, увійдіть або зареєструйтеся</p>
+        <div class="cta-buttons">
+          <%= link_to "Увійти", login_path, class: "btn-primary" %>
+          <%= link_to "Зареєструватися", register_path, class: "btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

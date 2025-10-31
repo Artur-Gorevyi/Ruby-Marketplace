@@ -1,0 +1,31 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Вхід</h1>
+    
+    <% if flash[:alert] %>
+      <div class="alert-message">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <%= form_with url: login_path, local: true do |form| %>
+      <div class="form-field">
+        <%= form.label :email, "Email" %>
+        <%= form.email_field :email, placeholder: "example@mail.com", required: true, autocomplete: "email", value: params[:email] %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :password, "Пароль" %>
+        <%= form.password_field :password, placeholder: "Введіть пароль", required: true, autocomplete: "current-password" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Увійти", class: "btn-primary" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <p>Немає акаунту? <%= link_to "Зареєструватися", register_path %></p>
+    </div>
+  </div>
+</div>

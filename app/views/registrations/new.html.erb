@@ -1,0 +1,41 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Реєстрація покупця</h1>
+    
+    <%= form_with model: @user, url: register_path, local: true do |form| %>
+      <% if @user.errors.any? %>
+        <div class="error-messages">
+          <h3>Виправте наступні помилки:</h3>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-field">
+        <%= form.label :email, "Email" %>
+        <%= form.email_field :email, placeholder: "example@mail.com", required: true, autocomplete: "email" %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :password, "Пароль" %>
+        <%= form.password_field :password, placeholder: "Мінімум 6 символів", required: true, autocomplete: "new-password" %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :password_confirmation, "Підтвердження пароля" %>
+        <%= form.password_field :password_confirmation, placeholder: "Введіть пароль ще раз", required: true, autocomplete: "new-password" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Зареєструватися", class: "btn-primary" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <p>Вже маєте акаунт? <%= link_to "Увійти", login_path %></p>
+    </div>
+  </div>
+</div>
