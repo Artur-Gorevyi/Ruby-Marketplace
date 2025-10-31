@@ -14,4 +14,16 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :login
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy", as: :logout
+
+  # Products routes (for buyers/visitors)
+  resources :products, only: [:index, :show]
+  
+  # Search route (same as products#index but with search param)
+  get "search", to: "products#index", as: :search
+
+  # Seller routes
+  namespace :seller do
+    root "dashboard#index"
+    resources :products
+  end
 end

@@ -1,0 +1,49 @@
+<div class="product-show-header">
+  <h1>Деталі товару</h1>
+  <%= link_to "Назад", products_path, class: "btn-secondary" %>
+</div>
+
+<div class="product-show-container">
+  <div class="product-show-content">
+    <div class="product-show-images">
+      <% if @product.photos.attached? %>
+        <div class="main-image">
+          <%= image_tag @product.photos.first, alt: @product.short_description %>
+        </div>
+        <% if @product.photos.count > 1 %>
+          <div class="thumbnail-images">
+            <% @product.photos.each do |photo| %>
+              <%= image_tag photo, alt: @product.short_description, class: "thumbnail" %>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="main-image placeholder">
+          <span>Немає фото</span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="product-show-info">
+      <h2><%= @product.short_description %></h2>
+      
+      <div class="product-show-price">
+        <strong><%= number_to_currency(@product.price, unit: "₴", separator: ",", delimiter: " ") %></strong>
+      </div>
+
+      <div class="product-show-details">
+        <p><strong>Категорія:</strong> <%= @product.category %></p>
+        <% if @product.color.present? %>
+          <p><strong>Колір:</strong> <%= @product.color %></p>
+        <% end %>
+        <p><strong>Продавець:</strong> <%= @product.seller.store_name.presence || @product.seller.email %></p>
+      </div>
+
+      <div class="product-show-description">
+        <h3>Опис:</h3>
+        <p><%= simple_format(@product.description) %></p>
+      </div>
+    </div>
+  </div>
+</div>
+

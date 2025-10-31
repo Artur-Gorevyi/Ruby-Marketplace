@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Кабінет продавця - Marketplace" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Marketplace">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="seller-body">
+    <div class="seller-container">
+      <!-- Бічне меню -->
+      <aside class="seller-sidebar">
+        <div class="sidebar-header">
+          <h2 class="store-name"><%= current_user.store_name.presence || "Мій магазин" %></h2>
+          <p class="store-email"><%= current_user.email %></p>
+        </div>
+        
+        <nav class="sidebar-nav">
+          <%= link_to seller_root_path, class: "nav-item #{'active' if request.path == seller_root_path}" do %>
+            <span class="nav-icon">📊</span>
+            <span>Головна</span>
+          <% end %>
+          
+          <%= link_to seller_products_path, class: "nav-item #{'active' if request.path.include?('products')}" do %>
+            <span class="nav-icon">📦</span>
+            <span>Товари</span>
+          <% end %>
+        </nav>
+
+        <div class="sidebar-footer">
+          <%= link_to root_path, class: "nav-item" do %>
+            <span class="nav-icon">🏠</span>
+            <span>На сайт</span>
+          <% end %>
+          <%= button_to logout_path, method: :delete, class: "nav-item logout-item", form: { class: "logout-form-inline" } do %>
+            <span class="nav-icon">🚪</span>
+            <span>Вихід</span>
+          <% end %>
+        </div>
+      </aside>
+
+      <!-- Основний контент -->
+      <main class="seller-content">
+        <!-- Flash повідомлення -->
+        <% if notice %>
+          <div class="flash flash-notice"><%= notice %></div>
+        <% end %>
+        
+        <% if alert %>
+          <div class="flash flash-alert"><%= alert %></div>
+        <% end %>
+
+        <!-- Динамічний контент -->
+        <div class="content-wrapper">
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+

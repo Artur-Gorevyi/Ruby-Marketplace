@@ -6,4 +6,7 @@ class User < ApplicationRecord
     validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
   
     enum :role, { buyer: 'buyer', seller: 'seller' }
+    
+    # Зв'язок для продавців
+    has_many :products, class_name: 'Product', foreign_key: 'seller_id', dependent: :destroy
   end

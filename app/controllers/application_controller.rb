@@ -15,14 +15,14 @@ class ApplicationController < ActionController::Base
   end
 
   def require_buyer
-    require_login
+    require_user_logged_in
     unless current_user&.buyer?
       redirect_to root_path, alert: "Доступно тільки для покупців"
     end
   end
 
   def require_seller
-    require_login
+    require_user_logged_in
     unless current_user&.seller?
       redirect_to root_path, alert: "Доступно тільки для продавців"
     end

@@ -1,0 +1,48 @@
+<div class="products-page">
+  <div class="products-header">
+    <h1>
+      <% if params[:search].present? %>
+        Результати пошуку: "<%= params[:search] %>"
+      <% else %>
+        Всі товари
+      <% end %>
+    </h1>
+  </div>
+
+  <% if params[:search].present? && @products.empty? %>
+    <div class="empty-search">
+      <p>За запитом "<%= params[:search] %>" нічого не знайдено.</p>
+      <%= link_to "Повернутися до всіх товарів", products_path, class: "btn-primary" %>
+    </div>
+  <% elsif @products.any? %>
+    <div class="products-grid">
+      <% @products.each do |product| %>
+        <div class="product-card">
+          <%= link_to product_path(product), class: "product-link" do %>
+            <% if product.photos.attached? %>
+              <div class="product-image">
+                <%= image_tag product.photos.first, alt: product.short_description %>
+              </div>
+            <% else %>
+              <div class="product-image placeholder">
+                <span>Без фото</span>
+              </div>
+            <% end %>
+            
+            <div class="product-info">
+              <h3><%= truncate(product.short_description, length: 50) %></h3>
+              <p class="product-price"><%= number_to_currency(product.price, unit: "₴", separator: ",", delimiter: " ") %></p>
+              <p class="product-category">Категорія: <%= product.category %></p>
+              <p class="product-seller">Продавець: <%= product.seller.store_name.presence || product.seller.email %></p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>Поки що немає товарів на маркетплейсі.</p>
+    </div>
+  <% end %>
+</div>
+

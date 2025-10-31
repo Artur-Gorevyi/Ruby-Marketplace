@@ -1,0 +1,71 @@
+<div class="form-header">
+  <h1>Редагувати товар</h1>
+  <%= link_to "Назад до списку", seller_products_path, class: "btn-secondary" %>
+</div>
+
+<div class="form-container">
+  <%= form_with model: [:seller, @product], multipart: true, local: true do |form| %>
+    <% if @product.errors.any? %>
+      <div class="error-messages">
+        <h3>Помилки при збереженні:</h3>
+        <ul>
+          <% @product.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-field">
+      <%= form.label :photos, "Фото товару (до 4 фото) *" %>
+      <% if @product.photos.attached? %>
+        <div class="existing-photos">
+          <p>Поточні фото:</p>
+          <div class="photos-preview">
+            <% @product.photos.each do |photo| %>
+              <div class="photo-item">
+                <%= image_tag photo, class: "photo-thumbnail" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <%= form.file_field :photos, multiple: true, accept: "image/*", class: "form-input" %>
+      <small>Можна вибрати до 4 фотографій. Нові фото додадуться до існуючих.</small>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :short_description, "Короткий опис *" %>
+      <%= form.text_area :short_description, rows: 3, class: "form-input", placeholder: "Короткий опис товару..." %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :description, "Повний опис *" %>
+      <%= form.text_area :description, rows: 6, class: "form-input", placeholder: "Детальний опис товару..." %>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <%= form.label :price, "Ціна *" %>
+        <%= form.number_field :price, step: 0.01, min: 0, class: "form-input", placeholder: "0.00" %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :category, "Категорія *" %>
+        <%= form.text_field :category, class: "form-input", placeholder: "Наприклад: Електроніка" %>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :color, "Колір" %>
+      <%= form.text_field :color, class: "form-input", placeholder: "Наприклад: Чорний" %>
+      <small>Необов'язкове поле</small>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Оновити товар", class: "btn-primary" %>
+      <%= link_to "Скасувати", seller_products_path, class: "btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+

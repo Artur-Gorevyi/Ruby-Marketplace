@@ -1,19 +1,38 @@
 <div class="home-container">
-  <div class="welcome-section">
-    <h1>Ласкаво просимо до Маркетплейсу!</h1>
+  <!-- Останні товари -->
+  <div class="latest-products-section">
+    <h2>Останні товари</h2>
     
-    <% if current_user %>
-      <div class="user-info">
-        <p>Вітаємо, <%= current_user.email %>!</p>
-        <p>Ваша роль: <strong><%= current_user.buyer? ? 'Покупець' : 'Продавець' %></strong></p>
+    <% if @latest_products.any? %>
+      <div class="products-grid">
+        <% @latest_products.each do |product| %>
+          <div class="product-card">
+            <%= link_to product_path(product), class: "product-link" do %>
+              <% if product.photos.attached? %>
+                <div class="product-image">
+                  <%= image_tag product.photos.first, alt: product.short_description %>
+                </div>
+              <% else %>
+                <div class="product-image placeholder">
+                  <span>Без фото</span>
+                </div>
+              <% end %>
+              
+              <div class="product-info">
+                <h3><%= truncate(product.short_description, length: 50) %></h3>
+                <p class="product-price"><%= number_to_currency(product.price, unit: "₴", separator: ",", delimiter: " ") %></p>
+                <p class="product-category">Категорія: <%= product.category %></p>
+                <p class="product-seller">Продавець: <%= product.seller.store_name.presence || product.seller.email %></p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
+      
+      <%= link_to "Подивитися всі товари", products_path, class: "btn-secondary view-all-btn" %>
     <% else %>
-      <div class="auth-cta">
-        <p>Щоб розпочати, будь ласка, увійдіть або зареєструйтеся</p>
-        <div class="cta-buttons">
-          <%= link_to "Увійти", login_path, class: "btn-primary" %>
-          <%= link_to "Зареєструватися", register_path, class: "btn-secondary" %>
-        </div>
+      <div class="empty-state">
+        <p>Поки що немає товарів на маркетплейсі.</p>
       </div>
     <% end %>
   </div>

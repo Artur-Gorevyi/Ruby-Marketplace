@@ -29,10 +29,26 @@
         <div class="nav-brand">
           <%= link_to "Маркетплейс", root_path %>
         </div>
+        
+        <!-- Пошук в navbar -->
+        <div class="nav-search">
+          <%= form_with url: search_path, method: :get, local: true, class: "nav-search-form" do |form| %>
+            <div class="nav-search-input-group">
+              <%= form.text_field :search, 
+                  placeholder: "Я шукаю...", 
+                  value: params[:search],
+                  class: "nav-search-input" %>
+              <%= form.submit "Пошук", class: "nav-search-btn" %>
+            </div>
+          <% end %>
+        </div>
+        
         <div class="nav-links">
           <% if current_user %>
             <span class="nav-user">Користувач: <%= current_user.email %></span>
-            <span class="nav-role">(<%= current_user.buyer? ? 'Покупець' : 'Продавець' %>)</span>
+            <% if current_user.seller? %>
+              <%= link_to "Кабінет продавця", seller_root_path, class: "nav-link" %>
+            <% end %>
             <%= button_to "Вихід", logout_path, method: :delete, class: "btn-logout", form: { class: "logout-form" } %>
           <% else %>
             <%= link_to "Увійти", login_path, class: "nav-link" %>
