@@ -36,6 +36,9 @@
               <p class="product-seller">Продавець: <%= product.seller.store_name.presence || product.seller.email %></p>
             </div>
           <% end %>
+          <div class="product-cart-button">
+            <%= render "cart/button", product: product %>
+          </div>
         </div>
       <% end %>
     </div>

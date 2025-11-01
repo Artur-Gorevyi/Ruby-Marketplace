@@ -1,0 +1,49 @@
+<div class="cart-page">
+  <div class="cart-header">
+    <h1>Кошик</h1>
+  </div>
+
+  <% if @cart_items.any? %>
+    <div class="cart-content">
+      <% @grouped_by_seller.each do |seller, items| %>
+        <div class="seller-group">
+          <div class="seller-group-header">
+            <h2>Товари від продавця: <%= seller.store_name.presence || seller.email %></h2>
+          </div>
+
+          <div class="cart-items-list">
+            <% items.each do |item| %>
+              <%= render "cart/cart_item", item: item, seller: seller, exceeds_stock: @exceeds_stock_for_item&.dig(item[:id]) %>
+            <% end %>
+          </div>
+
+          <div class="seller-group-footer">
+            <div class="seller-total" id="seller-total-<%= seller.id %>">
+              <strong>Всього за товари цього продавця: 
+                <%= number_to_currency(items.sum { |item| item[:product].price * item[:quantity] }, unit: "₴", separator: ",", delimiter: " ") %>
+              </strong>
+            </div>
+            <div class="seller-order-button">
+              <%= button_to "Замовити у продавця", "#", class: "btn-primary btn-order-seller", disabled: true, data: { seller_id: seller.id } %>
+              <small class="order-note">(Функціонал оформлення замовлення поки не реалізовано)</small>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="cart-total">
+        <div class="cart-total-content">
+          <h2>Загальна сума кошика: 
+            <strong id="cart-total-price"><%= number_to_currency(@total_price, unit: "₴", separator: ",", delimiter: " ") %></strong>
+          </h2>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="empty-cart">
+      <p>Ваш кошик порожній</p>
+      <%= link_to "Подивитися товари", products_path, class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>
+

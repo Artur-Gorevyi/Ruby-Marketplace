@@ -9,4 +9,7 @@ class User < ApplicationRecord
     
     # Зв'язок для продавців
     has_many :products, class_name: 'Product', foreign_key: 'seller_id', dependent: :destroy
+    
+    # Зв'язок для покупців
+    has_many :cart_items, dependent: :destroy
   end

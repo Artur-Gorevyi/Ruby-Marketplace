@@ -1,0 +1,29 @@
+<% 
+  # Створюємо правильну структуру для рендерингу
+  cart_item_for_render = if @cart_item.is_a?(Hash)
+    @cart_item
+  else
+    # Для ActiveRecord об'єктів
+    { id: @cart_item.id, product: @cart_item.product, quantity: @cart_item.quantity }
+  end
+  
+  exceeds_stock_value = @exceeds_stock_for_item&.dig(cart_item_for_render[:id]) || @exceeds_stock || false
+%>
+<%= turbo_stream.replace "cart-item-#{cart_item_for_render[:id]}" do %>
+  <%= render "cart/cart_item", item: cart_item_for_render, seller: @seller, exceeds_stock: exceeds_stock_value %>
+<% end %>
+
+<%# Оновлюємо суму продавця %>
+<%= turbo_stream.replace "seller-total-#{@seller.id}" do %>
+  <div id="seller-total-<%= @seller.id %>" class="seller-total">
+    <strong>Всього за товари цього продавця: 
+      <%= number_to_currency(@seller_total, unit: "₴", separator: ",", delimiter: " ") %>
+    </strong>
+  </div>
+<% end %>
+
+<%# Оновлюємо загальну суму кошика %>
+<%= turbo_stream.replace "cart-total-price" do %>
+  <strong id="cart-total-price"><%= number_to_currency(@total_price, unit: "₴", separator: ",", delimiter: " ") %></strong>
+<% end %>
+

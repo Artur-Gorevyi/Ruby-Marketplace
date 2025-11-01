@@ -1,6 +1,9 @@
 class Product < ApplicationRecord
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   
+  # Зв'язок для кошика
+  has_many :cart_items, dependent: :destroy
+  
   # Active Storage для фото (до 4 фото)
   has_many_attached :photos
   
@@ -9,6 +12,7 @@ class Product < ApplicationRecord
   validates :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :category, presence: true
+  validates :stock_quantity, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validate :photos_presence
   validate :photos_limit
   

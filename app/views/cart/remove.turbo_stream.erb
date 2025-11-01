@@ -1,0 +1,4 @@
+<%= turbo_stream.replace "cart-form-#{@product.id}" do %>
+  <%= render "cart/button", product: @product %>
+<% end %>
+

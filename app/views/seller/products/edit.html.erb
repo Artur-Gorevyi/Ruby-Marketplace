@@ -57,6 +57,12 @@
     </div>
 
     <div class="form-field">
+      <%= form.label :stock_quantity, "Кількість на складі *" %>
+      <%= form.number_field :stock_quantity, min: 0, step: 1, class: "form-input", placeholder: "0" %>
+      <small>Вкажіть кількість товару на складі</small>
+    </div>
+
+    <div class="form-field">
       <%= form.label :color, "Колір" %>
       <%= form.text_field :color, class: "form-input", placeholder: "Наприклад: Чорний" %>
       <small>Необов'язкове поле</small>

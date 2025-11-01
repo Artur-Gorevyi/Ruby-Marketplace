@@ -20,6 +20,13 @@ Rails.application.routes.draw do
   
   # Search route (same as products#index but with search param)
   get "search", to: "products#index", as: :search
+  
+  # Cart routes
+  get "cart", to: "cart#show", as: :cart
+  post "cart/add/:product_id", to: "cart#add", as: :add_to_cart
+  delete "cart/remove/:product_id", to: "cart#remove", as: :remove_from_cart
+  patch "cart/:id", to: "cart#update", as: :update_cart_item
+  delete "cart/:id", to: "cart#destroy", as: :remove_cart_item
 
   # Seller routes
   namespace :seller do

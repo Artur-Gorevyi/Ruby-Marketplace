@@ -1,0 +1,71 @@
+<% 
+  # Підтримка обох форматів: ActiveRecord об'єкт або хеш з session
+  product = item.is_a?(Hash) ? item[:product] : item.product
+  quantity = item.is_a?(Hash) ? item[:quantity] : item.quantity
+  item_id = item.is_a?(Hash) ? item[:id] : item.id
+  
+  available = product.stock_quantity || 0
+  # Показуємо помилку тільки якщо явно передано exceeds_stock = true
+  # Не перевіряємо quantity > available тут, бо це вже перевірено в контролері
+  item_exceeds = local_assigns[:exceeds_stock] == true
+%>
+
+<div id="cart-item-<%= item_id %>" class="cart-item">
+  <div class="cart-item-image">
+    <% if product.photos.attached? %>
+      <%= link_to product_path(product) do %>
+        <%= image_tag product.photos.first, alt: product.short_description %>
+      <% end %>
+    <% else %>
+      <div class="placeholder-image">
+        <span>Без фото</span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="cart-item-info">
+    <h3>
+      <%= link_to product_path(product), class: "cart-item-title-link" do %>
+        <%= product.short_description %>
+      <% end %>
+    </h3>
+    <p class="cart-item-category">Категорія: <%= product.category %></p>
+    <p class="cart-item-price">Ціна: <%= number_to_currency(product.price, unit: "₴", separator: ",", delimiter: " ") %></p>
+    
+    <div class="cart-item-quantity-controls">
+      <%= form_with url: update_cart_item_path(item_id), method: :patch, local: false, data: { turbo: true }, class: "quantity-form", id: "quantity-form-#{item_id}" do |f| %>
+        <%= button_tag "-", type: "submit", name: "quantity", value: quantity - 1, class: "quantity-btn quantity-btn-minus", disabled: quantity <= 1 %>
+        <%= f.number_field :quantity, 
+            value: quantity, 
+            min: 1, 
+            class: "quantity-input",
+            id: "item-quantity-input-#{item_id}",
+            required: true,
+            "data-product-id": product.id,
+            "data-stock-quantity": product.stock_quantity || 0,
+            onchange: "this.form.requestSubmit()" %>
+        <%= button_tag "+", type: "submit", name: "quantity", value: quantity + 1, class: "quantity-btn quantity-btn-plus" %>
+      <% end %>
+      <% if item_exceeds %>
+        <small class="stock-info error" id="stock-info-<%= item_id %>">
+          Доступно: <%= available %> шт.
+        </small>
+      <% end %>
+    </div>
+    
+    <p class="cart-item-total">Сума: <span id="item-total-<%= item_id %>"><%= number_to_currency(product.price * quantity, unit: "₴", separator: ",", delimiter: " ") %></span></p>
+  </div>
+
+  <div class="cart-item-actions">
+    <% if current_user %>
+      <%= form_with url: remove_cart_item_path(item_id), method: :delete, local: true do |f| %>
+        <%= f.submit "Видалити", class: "btn-danger btn-sm" %>
+      <% end %>
+    <% else %>
+      <%= form_with url: remove_from_cart_path(product), method: :delete, local: true do |f| %>
+        <%= f.submit "Видалити", class: "btn-danger btn-sm" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

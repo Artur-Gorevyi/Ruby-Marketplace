@@ -1,0 +1,14 @@
+<% if can_buy_product?(product) %>
+  <div id="cart-form-<%= product.id %>">
+    <% if product_in_cart?(product) %>
+      <%= link_to cart_path, class: "btn-secondary btn-cart-link" do %>
+        Перейти в кошик
+      <% end %>
+    <% else %>
+      <%= form_with url: add_to_cart_path(product), method: :post, local: false, data: { turbo: true } do |f| %>
+        <%= f.submit "Купити", class: "btn-primary btn-buy" %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+

@@ -43,6 +43,12 @@
         <h3>Опис:</h3>
         <p><%= simple_format(@product.description) %></p>
       </div>
+
+      <div class="product-show-actions">
+        <div class="product-cart-button">
+          <%= render "cart/button", product: @product %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
